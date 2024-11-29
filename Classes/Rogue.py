@@ -1,3 +1,8 @@
+# Level 5 Rogue Arcene Trickster Subclass
+# Stats:
+# STR: 8 | DEX: 18 | CON: 16 | INT:8 | WIS:16 | CHA:8
+
+
 class Rogue:
     def __init__(self, nome):
         self.nome = nome

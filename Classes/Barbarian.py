@@ -1,21 +1,49 @@
 import random
 
 
+# Level 5 Barbarian Bear Totem Subclass
+# Stats:
+# STR: 18 | DEX: 16 | CON: 16 | INT:8 | WIS:8 | CHA:8
+
+proficiencyBonus = 2
+
+
 class Barbarian:
 
-    def __init__(self):
-        self.CA = 15
-        self.HP = 50
-        self.danoFuria = 5
+    strengthModifier = 4
+    dexterityModifier = 3
+    constitutionModifier = 3
+    intelligenceModifier = -1
+    wisdomModifier = -1
+    charismaModifier = -1
 
-    def ataqueAcerto(self):
-        print(input("Pressione 1 para atacar duas vezes: "))
-        auxiliar = 0
-        for i in range(2):
+    furyExtraDamage = 2
+
+    def __init__(self):
+        self.CA = 10 + self.dexterityModifier + self.constitutionModifier
+        self.HP = 55
+
+    def attackRoll(self):
+        vectorAttacks = []
+        numberOfAttacks = 2
+        for i in range(numberOfAttacks):
+            d20 = random.randomint(1, 20)
+            total_attack_roll_value = d20 + proficiencyBonus + self.strengthModifier
+            vectorAttacks.append(total_attack_roll_value)
+        return vectorAttacks
+
+    def attackDamage(self, successfulAttacks):
+        for i in range(successfulAttacks):
             d12 = random.randint(1, 12)
-            print("Soma entre 5 e :  ", d12, self.danoFuria)
-            auxiliar += d12 + 5 + self.danoFuria
-        print("O total foi: ", auxiliar)
-        # A mensagem de ataque agora inclui o valor correto do dano
-        msg = "D" + "AM" + str(random.randint(1, 20)).zfill(2) + str(auxiliar)
+            total_damage = (
+                total_damage + d12 + self.strengthModifier + self.furyExtraDamage
+            )
+        msg = "O dano aplicado foi de {total_damage} cortante.\n"
         return msg
+
+    def whichAction(self):
+        action = input("Qual ação o personagem fará? 1-Ataque\n")
+        if action == 1:
+            self.attackRoll()
+        else:
+            print("Ação inválida, digite uma ação válida!\n")

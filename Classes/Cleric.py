@@ -1,3 +1,8 @@
+# Level 5 Cleric Storm Domain Subclass
+# Stats:
+# STR: 14 | DEX: 10 | CON: 16 | INT:8 | WIS:18 | CHA:8
+
+
 class Cleric:
     def __init__(self, nome, classe, nivel):
         self.nome = nome
