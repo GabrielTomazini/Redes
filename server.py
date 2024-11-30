@@ -1,9 +1,9 @@
 import socket
 import sys
-from Classes import Barbarian
-from Classes import Cleric
-from Classes import Rogue
-from Classes import Wizard
+from Classes.Barbarian import Barbarian
+from Classes.Cleric import Cleric
+from Classes.Rogue import Rogue
+from Classes.Wizard import Wizard
 
 proficiencyBonus = 3
 
@@ -15,13 +15,30 @@ class Character:
 
         # Definindo a classe com base no parâmetro recebido
         if className.upper() == "Barbaro".upper():
-            self.classeName = Barbarian()
+            self.className = Barbarian()
         elif className.upper() == "Mago".upper():
-            self.classeName = Wizard()
+            self.className = Wizard()
         elif className.upper() == "Ladino".upper():
-            self.classeName = Rogue()
+            self.className = Rogue()
         elif className.upper() == "Clerigo".upper():
-            self.classeName = Cleric()
+            self.className = Cleric()
+
+        def receivedAttack(self, msg):
+            if msg[:2] == "A" and int(msg[1:3]) > self.className.CA:
+                dano = int(msg[3:5])
+            else:
+                print("Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[1:3])
+                dano = 0
+            print("DANO RECEBIDO : ", dano)
+            nova_vida = self.getHP() - dano
+            self.setHP(nova_vida)
+            return nova_vida
+
+        def getHP(self):
+            return self.classe.HP
+
+        def setHP(self, newHP):
+            self.classe.HP = newHP
 
 
 def main():
@@ -39,11 +56,11 @@ def main():
     while not finished:
         print("Sua vez")
 
-        msg = character.classe.ataqueAcerto()  # Atacando o Inimigo,
+        msg = character.className.attackDamage()  # Atacando o Inimigo,
 
         player.send(
             msg.encode()
-        )  # enviar teste ou D20 e o dano, msg = 'AD' + '18' + '30'
+        )  # enviar teste ou D20 e o dano, msg = 'A' + '18' + '30'
 
         retorno = player.recv(1)  # mensagem
 
@@ -51,20 +68,20 @@ def main():
             sys.exit(-1)
         retorno = retorno.decode()
 
-        if retorno == "D":
-            acaoInimigo = player.recv(9)  # teste ou D20 e o Dano
-            acaoInimigo = acaoInimigo.decode()
+        if retorno == "A":
+            enemyAction = player.recv(9)  # teste ou D20 e o Dano
+            enemyAction = enemyAction.decode()
 
-            hpRestante = character.ataqueRecebido(acaoInimigo)
-            print("Seu HP restante: ", hpRestante)
-            if hpRestante <= 0:
+            leftHP = character.receivedAttack(enemyAction)
+            print("Seu HP restante: ", leftHP)
+            if leftHP <= 0:
                 player.send("V".encode())
-                encerrado = True
+                finished = True
                 break
             # msg = 'AD' + '18' + '30'
         elif retorno == "V":
-            print(f"{character.nome} venceu!")
-            encerrado = True
+            print(f"{character.name} venceu!")
+            finished = True
             break
 
 
