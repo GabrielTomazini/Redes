@@ -22,34 +22,47 @@ class Personagem:
             self.classe = Ladino()
         elif classe == "Clerigo":
             self.classe = Clerigo()
-
-    def ataqueRecebido(self , msg):
-       
+        else:
+            raise ValueError("Classe inválida!")
+    
+    def ataqueRecebido(self, msg):
+        # Processando ataque físico ou mágico
         if msg[:2] == "AD" and int(msg[2:4]) > self.getTeste(msg[4:7]):
             dano = int(msg[7:9])
         elif msg[:2] == "AM" and int(msg[2:4]) > self.classe.CA:  
             dano = int(msg[4:6])
+        elif msg[:2] == "ES":  # Verificando se é um ataque especial
+            print(f"O inimigo usou uma habilidade especial!")
         else:
-            print("Seu inimigo errou o ATAQUE, seu D20 foi: ",msg[2:4])
+            print("Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[2:4])
             dano = 0
         nova_vida = self.getVida() - dano
         self.setVida(nova_vida)
         return nova_vida
 
-        
     def getVida(self):
         return self.classe.HP
-    
+
     def setVida(self, novaVida):
         self.classe.HP = novaVida
+
+    def getTeste(self, habilidade):
+        return random.randint(1, 20) 
+
+    def especial(self):
+        # Chama o especial da classe
+        return self.classe.usarEspecial()
 
 def main():
     jogador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     endereco = ('127.0.0.1', 50000)
-  
     jogador.connect(endereco)
 
-    personagem2 = Personagem(input('Digite o nome do seu Personagem : '), input('Digite a classe do seu Personagem : '))
+    # Recebe o nome e classe do personagem
+    nome_personagem = input('Digite o nome do seu Personagem: ')
+    classe_personagem = input('Digite a classe do seu Personagem: ')
+
+    personagem2 = Personagem(nome_personagem, classe_personagem)
 
     encerrado = False
     
@@ -64,18 +77,25 @@ def main():
             acaoInimigo = acaoInimigo.decode()
 
             hpRestante = personagem2.ataqueRecebido(acaoInimigo)
-            print("Seu HP eh: ", hpRestante)
+            print("Seu HP é: ", hpRestante)
             if hpRestante <= 0:
                 jogador.send('V'.encode())  # Envia "V" para indicar vitória
                 encerrado = True
                 break
 
             print('Sua vez')
-            msg = personagem2.classe.ataqueAcerto()  # Atacar inimigo
-            jogador.send(msg.encode())  # Envia a mensagem de ataque
+            escolha = input("Digite 'A' para atacar ou 'E' para usar especial: ").strip().upper()
+            if escolha == 'A':
+                msg = personagem2.classe.ataqueAcerto()  # Atacar inimigo
+                jogador.send(msg.encode())  # Envia a mensagem de ataque
+            elif escolha == 'E':
+                # Usando o especial da classe
+                msg_especial = personagem2.especial()
+                jogador.send(msg_especial.encode())  # Envia a mensagem do especial
+                print(f"{personagem2.nome} usou seu especial!")
 
-        elif(codigo == 'V'):
-            print('Cliente Ganhou/n')
+        elif codigo == 'V':
+            print('Cliente Ganhou!')
             sys.exit(-2)
 
 if __name__ == '__main__':

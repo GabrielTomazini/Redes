@@ -1,20 +1,23 @@
 import random
 
 class Barbaro:
-
     def __init__(self):
-        self.CA = 15
-        self.HP = 50
-        self.danoFuria = 5
-
+        self.HP = 100  # Alto HP
+        self.CA = 15   # Boa defesa
+        self.dano_fisico = 12  # Ataque físico forte
+    
     def ataqueAcerto(self):
-        print(input('Pressione 1 para atacar duas vezes: '))
-        auxiliar = 0
-        for i in range(2):
-            d12 = random.randint(1, 12)
-            print("Soma entre 5 e :  ",d12 , self.danoFuria)
-            auxiliar +=  d12 + 5 + self.danoFuria
-        print("O total foi: ",auxiliar)
-        # A mensagem de ataque agora inclui o valor correto do dano
-        msg = 'D' + 'AM' + str(random.randint(1, 20)).zfill(2) + str(auxiliar)
-        return msg
+        d20 = random.randint(1, 20)
+        dano = random.randint(1, self.dano_fisico)
+        return f"AM{d20:02d}{dano:02d}"  # Ataque Físico
+
+    def getVida(self):
+        return self.HP
+    
+    def setVida(self, novaVida):
+        self.HP = novaVida
+
+    def especial(self):
+        bonus_ataque = random.randint(10, 20)  # Aumenta o dano por 5 a 10 no próximo ataque
+        self.dano_fisico += bonus_ataque
+        print(f"{self.__class__.__name__} entrou em FÚRIA! Próximo ataque terá bônus de {bonus_ataque} de dano!")
