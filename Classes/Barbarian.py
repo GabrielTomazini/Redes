@@ -1,5 +1,5 @@
 import random
-
+import sys
 
 # Level 5 Barbarian Bear Totem Subclass
 # Stats:
@@ -27,28 +27,79 @@ class Barbarian:
         vectorAttacks = []
         numberOfAttacks = 2
         for i in range(numberOfAttacks):
-            d20 = random.randomint(1, 20)
+            d20 = random.randint(1, 20)
             total_attack_roll_value = d20 + proficiencyBonus + self.strengthModifier
             vectorAttacks.append(total_attack_roll_value)
         return vectorAttacks
 
-    def attackDamage(self, successfulAttacks):
-        total_damage = 0
-        for i in range(successfulAttacks):
+    def attackDamage(self, attacks):
+        total_damage = []
+        for i in range(len(attacks)):
             d12 = random.randint(1, 12)
-            total_damage = (
-                total_damage + d12 + self.strengthModifier + self.furyExtraDamage
-            )
+            damage = d12 + self.strengthModifier + self.furyExtraDamage
+            total_damage.append(damage)
         # Mensagem ficará nesse formato:
-        # A0613 ou A1907
-        msg = "A" + str(random.randint(1, 20)).zfill(2) + str(total_damage).zfill(2)
+        # A06111909 A{d20Ataque1}{dano}{d20Ataque2}{dano}
+        msg = (
+            "A"
+            + str(attacks[0]).zfill(2)
+            + str(total_damage[0]).zfill(2)
+            + str(attacks[1]).zfill(2)
+            + str(total_damage[1]).zfill(2)
+        )
+        print("A mensagem é: ", msg, "\n")
         return msg
 
     def whichAction(self):
         attacks = []
-        action = input("Qual ação o personagem fará? 1-Ataque\n")
-        if action == 1:
+        action = input("Qual ação o personagem fará? 1-Ataque")
+        print("action is: ", action, "\n")
+        if int(action) == 1:
             attacks = self.attackRoll()
-
+            self.attackDamage(attacks)
         else:
             print("Ação inválida, digite uma ação válida!\n")
+
+    def receivedAttack(self, msg):
+        total_damage = 0
+        attack1 = False
+        attack2 = False
+        if msg[:1] == "A":  # carater 0
+            if int(msg[1:3]) > self.className.CA:  # 1:3 = caracter 1 e 2
+                total_damage = int(msg[3:5])  # 3:5 = caracter 3 e 4
+                print(
+                    "Seu inimigo acertou o ataque! \n d20: ",
+                    msg[1:3],
+                    " dano: ",
+                    msg[3:5],
+                    "\n",
+                )
+                attack1 = True
+            if int(msg[5:7]) > self.className.CA:  # 5:7 = caracter 5 e 6
+                total_damage = total_damage + int(msg[7:9])  # 5:7 = caracter 7 e 8
+                print(
+                    "Seu inimigo acertou o ataque! \n d20: ",
+                    msg[5:7],
+                    " dano: ",
+                    msg[7:9],
+                    "\n",
+                )
+                attack2 = True
+            if not attack1:
+                print("Seu inimigo errou o ataque! \n d20:", msg[1:3], "\n")
+            if not attack2:
+                print("Seu inimigo errou o ataque! \n d20:", msg[5:7], "\n")
+        else:
+            print("Mensagem não identificada, algo deu errado!\n")
+            sys.exit(-1)
+
+        print("Dano total : ", total_damage, "\n")
+        nova_vida = self.getHP() - total_damage
+        self.setHP(nova_vida)
+        return nova_vida
+
+    def getHP(self):
+        return self.HP
+
+    def setHP(self, newHP):
+        self.HP = newHP

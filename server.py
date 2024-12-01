@@ -49,14 +49,16 @@ def main():
 
     [player, _] = socketConnection.accept()
 
-    character = Character("Ronaldo, o Grande", "Barbaro")
+    character = Character(
+        input("Digite o nome do personagem:"), input("Digite a classe do personagem:")
+    )
 
     finished = False
 
     while not finished:
         print("Sua vez")
 
-        msg = character.className.attackDamage()  # Atacando o Inimigo,
+        msg = character.className.whichAction()  # Escolhendo a ação,
 
         player.send(
             msg.encode()
@@ -69,7 +71,7 @@ def main():
         retorno = retorno.decode()
 
         if retorno == "A":
-            enemyAction = player.recv(9)  # teste ou D20 e o Dano
+            enemyAction = player.recv(9)
             enemyAction = enemyAction.decode()
 
             leftHP = character.receivedAttack(enemyAction)

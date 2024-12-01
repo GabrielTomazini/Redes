@@ -23,30 +23,15 @@ class Character:
         elif className.upper() == "Clerigo".upper():
             self.className = Cleric()
 
-    def receivedAttack(self, msg):
-        if msg[:2] == "A" and int(msg[1:3]) > self.className.CA:
-            dano = int(msg[3:5])
-        else:
-            print("Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[1:3])
-            dano = 0
-        print("DANO RECEBIDO : ", dano)
-        nova_vida = self.getHP() - dano
-        self.setHP(nova_vida)
-        return nova_vida
-
-    def getHP(self):
-        return self.classe.HP
-
-    def setHP(self, newHP):
-        self.classe.HP = newHP
-
 
 def main():
     player = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     address = ("127.0.0.1", 50000)
     player.connect(address)
 
-    character2 = Character("Geraldo, o Bruto", "Barbaro")
+    character2 = Character(
+        input("Digite o nome do personagem:"), input("Digite a classe do personagem:")
+    )
 
     finished = False
 
@@ -54,21 +39,22 @@ def main():
         code = player.recv(1)  # Receber se ganhou ou não o player 1
         if not code:
             sys.exit(-1)
+        print("Code is: ", code, "\n")
 
         code = code.decode()
         if code == "A":
             acaoInimigo = player.recv(9)  # Receber Ataque inimigo
             acaoInimigo = acaoInimigo.decode()
 
-            hpRestante = character2.receivedAttack(acaoInimigo)
-            print("Seu HP eh: ", hpRestante)
+            hpRestante = character2.className.receivedAttack(acaoInimigo)
+            print("Seu HP eh: ", hpRestante, " \n")
             if hpRestante <= 0:
                 player.send("V".encode())  # Envia "V" para indicar vitória
                 finished = True
                 break
 
             print("Sua vez")
-            msg = character2.className.attackDamage(2)  # Atacar inimigo
+            msg = character2.className.whichAction()  # Atacar inimigo
             player.send(msg.encode())  # Envia a mensagem de ataque
 
         elif code == "V":
