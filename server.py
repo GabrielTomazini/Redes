@@ -23,23 +23,6 @@ class Character:
         elif className.upper() == "Clerigo".upper():
             self.className = Cleric()
 
-        def receivedAttack(self, msg):
-            if msg[:2] == "A" and int(msg[1:3]) > self.className.CA:
-                dano = int(msg[3:5])
-            else:
-                print("Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[1:3])
-                dano = 0
-            print("DANO RECEBIDO : ", dano)
-            nova_vida = self.getHP() - dano
-            self.setHP(nova_vida)
-            return nova_vida
-
-        def getHP(self):
-            return self.classe.HP
-
-        def setHP(self, newHP):
-            self.classe.HP = newHP
-
 
 def main():
     socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,13 +39,11 @@ def main():
     finished = False
 
     while not finished:
-        print("Sua vez")
+        print("Sua vez!\n")
 
         msg = character.className.whichAction()  # Escolhendo a ação,
 
-        player.send(
-            msg.encode()
-        )  # enviar teste ou D20 e o dano, msg = 'A' + '18' + '30'
+        player.send(msg.encode())
 
         retorno = player.recv(1)  # mensagem
 
@@ -74,15 +55,15 @@ def main():
             enemyAction = player.recv(9)
             enemyAction = enemyAction.decode()
 
-            leftHP = character.receivedAttack(enemyAction)
-            print("Seu HP restante: ", leftHP)
-            if leftHP <= 0:
+            remainingHP = character.className.receivedAttack(enemyAction)
+            print("Seu HP restante é: ", remainingHP)
+            if remainingHP <= 0:
                 player.send("V".encode())
                 finished = True
                 break
             # msg = 'AD' + '18' + '30'
         elif retorno == "V":
-            print(f"{character.name} venceu!")
+            print(f"{character.name} Ganhou!\n")
             finished = True
             break
 

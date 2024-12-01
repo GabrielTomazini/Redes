@@ -41,22 +41,21 @@ class Barbarian:
         # Mensagem ficará nesse formato:
         # A06111909 A{d20Ataque1}{dano}{d20Ataque2}{dano}
         msg = (
-            "A"
+            "AA"
             + str(attacks[0]).zfill(2)
             + str(total_damage[0]).zfill(2)
             + str(attacks[1]).zfill(2)
             + str(total_damage[1]).zfill(2)
         )
-        print("A mensagem é: ", msg, "\n")
         return msg
 
     def whichAction(self):
         attacks = []
-        action = input("Qual ação o personagem fará? 1-Ataque")
-        print("action is: ", action, "\n")
+        action = input("Qual ação o personagem fará? (1-Ataque) ")
         if int(action) == 1:
             attacks = self.attackRoll()
-            self.attackDamage(attacks)
+            msg = self.attackDamage(attacks)
+            return msg
         else:
             print("Ação inválida, digite uma ação válida!\n")
 
@@ -65,7 +64,7 @@ class Barbarian:
         attack1 = False
         attack2 = False
         if msg[:1] == "A":  # carater 0
-            if int(msg[1:3]) > self.className.CA:  # 1:3 = caracter 1 e 2
+            if int(msg[1:3]) >= self.CA:  # 1:3 = caracter 1 e 2
                 total_damage = int(msg[3:5])  # 3:5 = caracter 3 e 4
                 print(
                     "Seu inimigo acertou o ataque! \n d20: ",
@@ -75,7 +74,7 @@ class Barbarian:
                     "\n",
                 )
                 attack1 = True
-            if int(msg[5:7]) > self.className.CA:  # 5:7 = caracter 5 e 6
+            if int(msg[5:7]) >= self.CA:  # 5:7 = caracter 5 e 6
                 total_damage = total_damage + int(msg[7:9])  # 5:7 = caracter 7 e 8
                 print(
                     "Seu inimigo acertou o ataque! \n d20: ",
@@ -93,10 +92,9 @@ class Barbarian:
             print("Mensagem não identificada, algo deu errado!\n")
             sys.exit(-1)
 
-        print("Dano total : ", total_damage, "\n")
-        nova_vida = self.getHP() - total_damage
-        self.setHP(nova_vida)
-        return nova_vida
+        newHP = self.getHP() - total_damage
+        self.setHP(newHP)
+        return newHP
 
     def getHP(self):
         return self.HP

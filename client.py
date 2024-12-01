@@ -39,16 +39,15 @@ def main():
         code = player.recv(1)  # Receber se ganhou ou não o player 1
         if not code:
             sys.exit(-1)
-        print("Code is: ", code, "\n")
 
         code = code.decode()
         if code == "A":
-            acaoInimigo = player.recv(9)  # Receber Ataque inimigo
-            acaoInimigo = acaoInimigo.decode()
+            enemyAction = player.recv(9)  # Receber Ataque inimigo
+            enemyAction = enemyAction.decode()
 
-            hpRestante = character2.className.receivedAttack(acaoInimigo)
-            print("Seu HP eh: ", hpRestante, " \n")
-            if hpRestante <= 0:
+            remainingHP = character2.className.receivedAttack(enemyAction)
+            print("Seu HP restante é: ", remainingHP, " \n")
+            if remainingHP <= 0:
                 player.send("V".encode())  # Envia "V" para indicar vitória
                 finished = True
                 break
@@ -58,7 +57,7 @@ def main():
             player.send(msg.encode())  # Envia a mensagem de ataque
 
         elif code == "V":
-            print("Cliente Ganhou/n")
+            print(f"{character2.name} Ganhou!\n")
             sys.exit(-2)
 
 
