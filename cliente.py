@@ -9,39 +9,21 @@ from clerigo import Clerigo
 bonusProeficiencia = 3
 
 class Personagem:
-    def __init__(self, nome, classe):
-        self.nome = nome
+   def __init__(self,classe):
+        self.nome = None
         self.classe = None
         
         # Definindo a classe com base no parâmetro recebido
-        if classe == "Barbaro":
+        if classe == '1':
+            self.nome = "GROAK"
+            print("Você escolheu um Barbaro!! \n Parabéns por escolher o Herói GROAK")
             self.classe = Barbaro()
-        elif classe == "Mago":
+        elif classe == '2':
             self.classe = Mago()
         elif classe == "Ladino":
             self.classe = Ladino()
         elif classe == "Clerigo":
             self.classe = Clerigo()
-
-    def ataqueRecebido(self , msg):
-       
-        if msg[:2] == "AD" and int(msg[2:4]) > self.getTeste(msg[4:7]):
-            dano = int(msg[7:9])
-        elif msg[:2] == "AM" and int(msg[2:4]) > self.classe.CA:  
-            dano = int(msg[4:6])
-        else:
-            print("Seu inimigo errou o ATAQUE, seu D20 foi: ",msg[2:4])
-            dano = 0
-        nova_vida = self.getVida() - dano
-        self.setVida(nova_vida)
-        return nova_vida
-
-        
-    def getVida(self):
-        return self.classe.HP
-    
-    def setVida(self, novaVida):
-        self.classe.HP = novaVida
 
 def main():
     jogador = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,7 +31,7 @@ def main():
   
     jogador.connect(endereco)
 
-    personagem2 = Personagem(input('Digite o nome do seu Personagem : '), input('Digite a classe do seu Personagem : '))
+    personagem2 = Personagem(input('Digite a classe do Personagem 2:\n (1) Barbaro\n (2) Mago\n (3)Clerigo\n  '))
 
     encerrado = False
     
@@ -63,7 +45,7 @@ def main():
             acaoInimigo = jogador.recv(9)  # Receber Ataque inimigo
             acaoInimigo = acaoInimigo.decode()
 
-            hpRestante = personagem2.ataqueRecebido(acaoInimigo)
+            hpRestante = personagem2.classe.ataqueRecebido(acaoInimigo)
             print("Seu HP eh: ", hpRestante)
             if hpRestante <= 0:
                 jogador.send('V'.encode())  # Envia "V" para indicar vitória
