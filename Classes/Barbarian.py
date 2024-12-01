@@ -39,7 +39,7 @@ class Barbarian:
             damage = d12 + self.strengthModifier + self.furyExtraDamage
             total_damage.append(damage)
         # Mensagem ficará nesse formato:
-        # A06111909 A{d20Ataque1}{dano}{d20Ataque2}{dano}
+        # AA06111909 A{d20Ataque1}{dano}{d20Ataque2}{dano}
         msg = (
             "AA"
             + str(attacks[0]).zfill(2)
