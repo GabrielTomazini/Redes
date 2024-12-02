@@ -2,8 +2,6 @@ import random
 import socket
 import sys
 from barbaro import Barbaro
-from mago import Mago
-from ladino import Ladino
 from clerigo import Clerigo
 
 bonusProeficiencia = 3
@@ -22,7 +20,7 @@ class Personagem:
             self.classe = Mago()
         elif classe == "Ladino":
             self.classe = Ladino()
-        elif classe == "Clerigo":
+        elif classe == '3':
             self.nome = "Nephis"
             print("Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3")
             self.classe = Clerigo()
