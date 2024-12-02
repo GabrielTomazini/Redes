@@ -3,6 +3,9 @@ import socket
 import sys
 from barbaro import Barbaro
 from clerigo import Clerigo
+from colorama import init, Fore
+
+init(autoreset=True)
 
 bonusProeficiencia = 3
 
@@ -14,7 +17,7 @@ class Personagem:
         # Definindo a classe com base no parâmetro recebido
         if classe == '1':
             self.nome = "GROAK"
-            print("Você escolheu um Barbaro!! \n Parabéns por escolher o Herói GROAK")
+            print(Fore.RED + "Você escolheu um Barbaro!! \n Parabéns por escolher o Herói GROAK")
             self.classe = Barbaro()
         elif classe == '2':
             self.classe = Mago()
@@ -22,7 +25,7 @@ class Personagem:
             self.classe = Ladino()
         elif classe == '3':
             self.nome = "Nephis"
-            print("Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3")
+            print(Fore.RED + "Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3")
             self.classe = Clerigo()
 
 def main():

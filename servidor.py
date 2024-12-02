@@ -3,6 +3,9 @@ import socket
 import sys
 from barbaro import Barbaro
 from clerigo import Clerigo
+from colorama import init, Fore, Back, Style
+
+init(autoreset=True)
 
 bonusProeficiencia = 3
 
@@ -14,7 +17,7 @@ class Personagem:
         # Definindo a classe com base no parâmetro recebido
         if classe == '1':
             self.nome = "GROAK"
-            print("Você escolheu um Barbaro!! \n Parabéns por escolher o Herói GROAK")
+            print(Fore.RED + "Você escolheu um Barbaro!! \n Parabéns por escolher o Herói GROAK ")
             self.classe = Barbaro()
         elif classe == '2':
             self.classe = Mago()
@@ -22,7 +25,7 @@ class Personagem:
             self.classe = Ladino()
         elif classe == '3':
             self.nome = "Nephis"
-            print("Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3")
+            print(Fore.YELLOW + "Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3 ")
             self.classe = Clerigo()
 
     def ataqueRecebido(self , msg):
@@ -60,6 +63,28 @@ def main():
     
     while not encerrado:
         print('Sua vez')
+
+        print(Fore.RED + "Texto em vermelho")
+        print(Fore.GREEN + "Texto em verde")
+        print(Fore.YELLOW + "Texto em amarelo")
+        print(Fore.BLUE + "Texto em azul")
+        print(Fore.MAGENTA + "Texto em magenta")
+        print(Fore.CYAN + "Texto em ciano")
+        print(Fore.WHITE + "Texto em branco")
+
+        # Fundo com cores
+        print(Back.RED + "Fundo vermelho")
+        print(Back.GREEN + "Fundo verde")
+        print(Back.YELLOW + "Fundo amarelo")
+        print(Back.BLUE + "Fundo azul")
+        print(Back.MAGENTA + "Fundo magenta")
+        print(Back.CYAN + "Fundo ciano")
+        print(Back.WHITE+ Fore.RED + "Fundo branco")
+
+        # Usando estilo
+        print(Style.BRIGHT + "Texto brilhante (negrito)")
+        print(Style.NORMAL + "Texto normal")
+        print(Style.RESET_ALL + "Texto resetado para padrão")
 
         msg = personagem1.classe.ataqueAcerto()  # Atacando o Inimigo,
         

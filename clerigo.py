@@ -1,5 +1,6 @@
 import random
-
+from colorama import init, Fore,Style
+init(autoreset=True)
 class Clerigo:
 
     def __init__(self):
@@ -19,7 +20,7 @@ class Clerigo:
         #arma -> mais dano menos ca
         #armadura -> mais ca menos dano
         #corpo -> mais ca e dano
-        escolha = input('Deseja usar habilidade de aspecto na arma, corpo ou armadura radiante?\n (1) arma \n (2) corpo\n (3) armadura\n')
+        escolha = input(Fore.BLUE+'Deseja usar habilidade de aspecto na arma, corpo ou armadura radiante?\n (1) arma \n (2) corpo\n (3) armadura\n')
         if(escolha == '1'):
             self.arma = True
         elif(escolha == '2'):
@@ -27,7 +28,7 @@ class Clerigo:
         else:
             self.armadura = True
 
-        ataque = input('Deseja usar ataque utilizar?\n (1) Ataque certeiro (2) estilo de batalha fluido\n (3) chama imortal\n ')
+        ataque = input(Fore.BLUE+'Deseja usar ataque utilizar?\n (1) Ataque certeiro (2) estilo de batalha fluido\n (3) chama imortal\n ')
 
         if(ataque == '1'):
             d12 = random.randint(1, 12)
@@ -40,7 +41,7 @@ class Clerigo:
                 auxiliar+=3
             if(self.arma == True):
                 auxiliar+=6
-            print("Seu D20: \n Seu dano:",auxiliar, dano)
+            print(Fore.BLUE+"Seu D20: \n Seu dano:",auxiliar, dano)
             
         if(ataque == '2'):
             d12 = random.randint(1, 12)
@@ -54,7 +55,7 @@ class Clerigo:
                 auxiliar+=3
             if(self.arma == True):
                 auxiliar+=6
-            print("Seu D20: \n Seu dano:",auxiliar, dano)
+            print(Fore.BLUE+"Seu D20: \n Seu dano:",auxiliar, dano)
             
 
         if(ataque == '3'):
@@ -63,7 +64,7 @@ class Clerigo:
             self.cura = True
             auxiliar = 0
             dano = 0
-            print("hack ativado")
+            print(Fore.BLUE+"hack ativado")
 
         msg = 'D' + 'A' + str(auxiliar).zfill(2) + str(dano)
         return msg
@@ -86,9 +87,9 @@ class Clerigo:
         elif msg[:1] == "A" and int(msg[1:3]) > CA:  
             dano = int(msg[3:5])/2
         else:
-            print("Seu inimigo errou o ATAQUE, seu D20 foi: ",msg[1:3])
+            print(Fore.BLUE+"Seu inimigo errou o ATAQUE, seu D20 foi: ",msg[1:3])
             dano = 0
-        print("DANO RECEBIDO : ", dano)
+        print(Fore.BLUE+"DANO RECEBIDO : ", dano)
 
         nova_vida = self.HP - dano
 
@@ -98,7 +99,7 @@ class Clerigo:
         if(nova_vida <= 0 and self.CHAMA == False):
             nova_vida = 100
             self.CHAMA = True
-            print("HABILIDADE DE ASPECTO CHAMA IMORTAL!!!\n")
+            print(Fore.BLUE+"HABILIDADE DE ASPECTO CHAMA IMORTAL!!!\n")
         
         self.HP = nova_vida
         self.armadura = False
