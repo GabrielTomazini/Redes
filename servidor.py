@@ -23,6 +23,8 @@ class Personagem:
         elif classe == "Ladino":
             self.classe = Ladino()
         elif classe == "Clerigo":
+            self.nome = "Nephis"
+            print("Você escolheu um clerigo!! \n Parabéns por escolher a ESTRELA DA MUDANÇA NEPHIS <3")
             self.classe = Clerigo()
 
     def ataqueRecebido(self , msg):
