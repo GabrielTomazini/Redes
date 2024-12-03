@@ -126,8 +126,9 @@ class Clerigo:
             nova_vida += 10
 
         if nova_vida <= 0 and self.CHAMA == False:
-            nova_vida = 100
+            nova_vida = 10
             self.CHAMA = True
+
             print(
                 Back.YELLOW
                 + Style.BRIGHT
