@@ -1,87 +1,111 @@
+# Level 5 Rogue Arcene Trickster Subclass
+# Feat: Sharpshooter: -5 in attack roll, +10 in damage
+# Stats:
+# STR: 8 | DEX: 18 | CON: 16 | INT:8 | WIS:16 | CHA:8
 import random
-from colorama import init, Fore, Style
+import math
+from colorama import init, Fore, Style, Back
 
 init(autoreset=True)
 
+bonusProficiencia = 3
+11
+
 
 class Ladino:
+    modDestreza = 3
+    espacosDeMagia = 3
 
     def __init__(self):
-        self.CA = 15
-        self.HP = 50
-        self.esquivo = False
-        self.danoFuria = 3
-        self.Imprudente = False
-        self.orc = False
+        self.CA = 16
+        self.HP = 43
 
     def ataqueAcerto(self):
-        auxiliar = 0
-        dano = 0
-        imprudente = input(
-            Style.BRIGHT + "Deseja usar ataque imprudente?\n (1) Sim \n (2) Não\n"
-        )
-        if imprudente == "1":
-            self.Imprudente = True
-        else:
-            self.Imprudente = False
         ataque = input(
-            Style.BRIGHT
-            + "Deseja usar ataque utilizar?\n (1) Ataque com Machado 2x (2) Modo ESQUIVOOO\n"
+            Back.WHITE
+            + Fore.CYAN
+            + Style.BRIGHT
+            + "Deseja usar o Franco Atirador ou ataque normal?\n (1)Franco Atirador\n (2)Ataque Normal\n "
         )
-        if ataque == "1":
-            d12 = random.randint(1, 12)
-            print(Style.BRIGHT + "Soma entre 5 e :  ", d12, self.danoFuria)
-            dano = d12 + 5 + self.danoFuria
-            auxiliar = random.randint(1, 20)
-
-            if self.Imprudente == True:
-                auxiliar += 5
-            print(Style.BRIGHT + "Seu D20: \n Seu dano:", auxiliar, dano)
-
+        # Vantagem da mira firme
+        maiord20 = 0
+        d20_1 = random.randint(1, 20)
+        d20_2 = random.randint(1, 20)
+        if d20_1 >= d20_2:
+            maiord20 = d20_1
         else:
-            self.esquivo = True
-            auxiliar = 0
+            maiord20 = d20_2
+        if ataque == "1":
+            d20Final = (
+                maiord20 + self.modDestreza + bonusProficiencia - 5
+            )  # -5 sharpshooter
             dano = 0
-            print(Style.BRIGHT + "Modo ESQUIVO ATIVADO, ME ACERTA QUE EU DUVIDO")
-        msg = "D" + "A" + str(auxiliar).zfill(2) + str(dano)
+            if d20Final == 20:  # Ataque crítico, rola o dobro dos dados e modificadores
+                for i in range(1, 8):
+                    d6 = random.randint(1, 6)
+                    dano = dano + d6
+                dano = dano + 20 + 2 * self.modDestreza  # +10 sharpshooter
+            else:
+                for i in range(1, 4):
+                    d6 = random.randint(1, 6)
+                    dano = dano + d6
+                dano = dano + 10 + self.modDestreza  # +10 sharpshooter
+        elif ataque == "2":
+            d20Final = maiord20 + self.modDestreza + bonusProficiencia
+            dano = 0
+            if d20Final == 20:  # Ataque crítico, rola o dobro dos dados e modificadores
+                for i in range(1, 8):
+                    d6 = random.randint(1, 6)
+                    dano = dano + d6
+                dano = dano + 2 * self.modDestreza  # +10 sharpshooter
+            else:
+                for i in range(1, 4):
+                    d6 = random.randint(1, 6)
+                    dano = dano + d6
+                dano = dano + self.modDestreza  # +10 sharpshooter
+        else:
+            print(Back.WHITE + Fore.CYAN + Style.BRIGHT + "Digite um ataque válido!\n")
+        print(
+            Back.WHITE
+            + Fore.CYAN
+            + Style.BRIGHT
+            + "Seu D20: "
+            + str(d20Final)
+            + "\nSeu dano: "
+            + str(dano)
+        )
+        msg = "D" + "A" + str(d20Final).zfill(2) + str(dano)
         return msg
-        # A mensagem de ataque agora inclui o valor correto do dano
 
     def ataqueRecebido(self, msg):
-        if self.esquivo == True:
-            CA = self.CA + 5
-        elif self.Imprudente == True:
-            CA = self.CA - 2
+
+        if msg[:1] == "E" and int(msg[1:3]) >= self.getTeste(msg[1:3]):
+            dano = math.ceil(int(msg[3:5]) / 2)
+        elif msg[:1] == "A" and int(msg[1:3]) >= self.CA:
+            # Se o ataque for menor que CA+5, usa shield
+            if int(msg[1:3]) < (self.CA + 5) and self.espacosDeMagia > 0:
+                self.espacosDeMagia = self.espacosDeMagia - 1
+                print(
+                    Back.WHITE
+                    + Fore.CYAN
+                    + Style.BRIGHT
+                    + "Você usou Escudo Arcano! Seu inimigo errou o Ataque, seu d20 foi: "
+                    + msg[1:3]
+                )
+                dano = 0
+            else:
+                dano = int(msg[3:5])
         else:
-            CA = self.CA
-        if msg[:1] == "E" and int(msg[1:3]) > self.getTeste(msg[1:3]):
-            dano = int(msg[3:5]) / 2
-        elif msg[:1] == "A" and int(msg[1:3]) > CA:
-            dano = int(msg[3:5]) / 2
-        else:
-            print(Style.BRIGHT + "Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[1:3])
+            print(
+                Back.WHITE
+                + Fore.CYAN
+                + Style.BRIGHT
+                + "Seu inimigo errou o Ataque, seu d20 foi: "
+                + msg[1:3]
+            )
             dano = 0
-        print(Style.BRIGHT + "DANO RECEBIDO : ", dano)
+        print(Back.WHITE + Fore.CYAN + Style.BRIGHT + "Dano recebido : " + str(dano))
 
         nova_vida = self.HP - dano
-        if dano > 20:
-            Irina = input(
-                "Você ira sofrer um dano monstruoso\n Deseja utilizar seu Trunfo Final(única utilização)? \n (1)Sim \n (2) Não\n"
-            )
-            print(
-                "Sua AMADA Irina lhe salvou , Parabéns Herói GROAK, parece que até anjos estão de olho em você!!"
-            )
-            nova_vida += 20
-
-        if nova_vida == 0 and self.orc == False:
-            nova_vida = 1
-            self.orc = True
-            print("EU SOU ORC SEU OTÁRIO!!!\n")
-
         self.HP = nova_vida
-        self.Imprudente = False
-        self.esquivo = False
         return nova_vida
-
-    def getTeste(self):
-        print("oi")

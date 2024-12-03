@@ -9,7 +9,7 @@ class Barbaro:
 
     def __init__(self):
         self.CA = 15
-        self.HP = 50
+        self.HP = 55
         self.esquivo = False
         self.danoFuria = 3
         self.Imprudente = False
@@ -75,9 +75,9 @@ class Barbaro:
             CA = self.CA - 2
         else:
             CA = self.CA
-        if msg[:1] == "E" and int(msg[1:3]) > self.getTeste(msg[1:3]):
+        if msg[:1] == "E" and int(msg[1:3]) >= self.getTeste(msg[1:3]):
             dano = math.ceil(int(msg[3:5]) / 2)
-        elif msg[:1] == "A" and int(msg[1:3]) > CA:
+        elif msg[:1] == "A" and int(msg[1:3]) >= CA:
             dano = math.ceil(int(msg[3:5]) / 2)
         else:
             print(

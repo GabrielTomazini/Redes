@@ -27,8 +27,6 @@ class Personagem:
             self.classe = Barbaro()
         elif classe == "2":
             self.classe = Mago()
-        elif classe == "Ladino":
-            self.classe = Ladino()
         elif classe == "3":
             self.nome = "Nephis"
             print(
@@ -36,6 +34,13 @@ class Personagem:
                 + "\nVocê escolheu um Clérigo!\nParabéns por escolher Nephis, Estrela da mudança\n"
             )
             self.classe = Clerigo()
+        elif classe == "4":
+            self.nome = "Sarah"
+            print(
+                Fore.YELLOW
+                + "\nVocê escolheu um Ladino!\nParabéns por escolher Sarah Frostriver!\n"
+            )
+            self.classe = Ladino()
 
 
 def main():

@@ -9,7 +9,7 @@ class Clerigo:
 
     def __init__(self):
         self.CA = 16
-        self.HP = 50
+        self.HP = 43
         self.esquivo = False
         self.danobase = 3
         self.CHAMA = False
@@ -106,10 +106,10 @@ class Clerigo:
             CA = self.CA - 3
         else:
             CA = self.CA
-        if msg[:1] == "E" and int(msg[1:3]) > self.getTeste(msg[1:3]):
-            dano = math.ceil(int(msg[3:5]) / 2)
-        elif msg[:1] == "A" and int(msg[1:3]) > CA:
-            dano = math.ceil(int(msg[3:5]) / 2)
+        if msg[:1] == "E" and int(msg[1:3]) >= self.getTeste(msg[1:3]):
+            dano = int(msg[3:5])
+        elif msg[:1] == "A" and int(msg[1:3]) >= CA:
+            dano = int(msg[3:5])
         else:
             print(
                 Back.YELLOW
