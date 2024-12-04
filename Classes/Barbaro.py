@@ -49,7 +49,7 @@ class Barbaro:
             print(
                 Style.BRIGHT
                 + Back.RED
-                + "Seu D20: "
+                + "Seu d20: "
                 + str(auxiliar)
                 + "\nSeu dano: "
                 + str(dano)
@@ -90,11 +90,11 @@ class Barbaro:
         print(Style.BRIGHT + Back.RED + "Dano recebido : " + str(dano))
 
         nova_vida = self.HP - dano
-        if dano > 20:
+        if dano > 10:
             Irina = input(
                 Style.BRIGHT
                 + Back.RED
-                + "Você ira sofrer um dano monstruoso\n Deseja utilizar seu Trunfo Final(única utilização)? \n (1)Sim \n (2) Não\n "
+                + "Você irá sofrer um dano monstruoso\n Deseja utilizar seu Trunfo Final(única utilização)? \n (1)Sim \n (2) Não\n "
             )
             print(
                 Style.BRIGHT

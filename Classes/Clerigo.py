@@ -7,6 +7,10 @@ init(autoreset=True)
 
 class Clerigo:
 
+    espacos1Ciclo = 4
+    espacos2Ciclo = 3
+    espacos3Ciclo = 2
+
     def __init__(self):
         self.CA = 16
         self.HP = 43
@@ -17,6 +21,7 @@ class Clerigo:
         self.corpo = False
         self.armadura = False
         self.cura = False
+        self.modificadorSabedoria = 4
 
     def ataqueAcerto(self):
         auxiliar = 0
@@ -123,7 +128,39 @@ class Clerigo:
         nova_vida = self.HP - dano
 
         if self.cura == True:
-            nova_vida += 10
+            cura_total = 0
+            if self.espacos3Ciclo > 0:
+                for i in range(1, 6):
+                    # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 3ºciclo
+                    d4 = random.randint(1, 4)
+                    cura_total += d4
+                cura_total += self.modificadorSabedoria
+            elif self.espacos2Ciclo > 0:
+                for i in range(1, 4):
+                    # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 2ºciclo
+                    d4 = random.randint(1, 4)
+                    cura_total += d4
+                cura_total += self.modificadorSabedoria
+            elif self.espacos1Ciclo > 0:
+                for i in range(1, 2):
+                    # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 2ºciclo
+                    d4 = random.randint(1, 4)
+                    cura_total += d4
+                cura_total += self.modificadorSabedoria
+            else:
+                print(
+                    Back.YELLOW
+                    + Style.BRIGHT
+                    + "Você não possui mais espaços de magia restantes!\n"
+                )
+            print(
+                Back.YELLOW
+                + Style.BRIGHT
+                + "Você curou "
+                + str(cura_total)
+                + " pontos de vida!\n"
+            )
+            nova_vida += cura_total
 
         if nova_vida <= 0 and self.CHAMA == False:
             nova_vida = 10

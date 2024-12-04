@@ -1,87 +1,131 @@
+# Lvl.5 Wizard Bladesinger Turtle
+# Combate:
+# Bladesong ativado durante o combate(soma Inteligência na CA), armadura arcana já ativada também
+
+# Stats:
+# STR: 8 | DEX: 18 | CON: 16 | INT:16 | WIS:8 | CHA:8
 import random
-from colorama import init, Fore, Style
+from colorama import init, Fore, Style, Back
 
 init(autoreset=True)
+
+bonusProficiencia = 3
 
 
 class Mago:
 
+    espacos1Ciclo = 4
+    espacos2Ciclo = 3
+    espacos3Ciclo = 2
+
+    modDestreza = 4
+    modInteligencia = 3
+
+    dodgeAction = False
+
     def __init__(self):
-        self.CA = 15
-        self.HP = 50
-        self.esquivo = False
-        self.danoFuria = 3
-        self.Imprudente = False
-        self.orc = False
+        self.CA = 20  # CA = 13(armadura arcana) + 4(destreza) + 3(bladesong)
+        self.HP = 37
 
     def ataqueAcerto(self):
-        auxiliar = 0
+        acao = input(
+            Back.MAGENTA
+            + Fore.WHITE
+            + Style.BRIGHT
+            + "Qual ação deseja fazer?\n(1)Lâmina das trevas + Lâmina estrondosa\n "
+        )
+        if acao == "1":
+            d20 = random.randint(1, 20)
+            d20Final = d20 + self.modDestreza + bonusProficiencia
+        else:
+            print(
+                Back.MAGENTA + Fore.WHITE + Style.BRIGHT + "Digite uma Ação Válida!\n"
+            )
         dano = 0
-        imprudente = input(
-            Style.BRIGHT + "Deseja usar ataque imprudente?\n (1) Sim \n (2) Não\n"
-        )
-        if imprudente == "1":
-            self.Imprudente = True
+        if d20 == 20:  # Crítico dobra os dados
+            d20Final = (
+                40  # acerto automático, valor ridiculamente alto para simular isso
+            )
+            for i in range(1, 8):
+                d8 = random.randint(1, 8)
+                dano = dano + d8
+            dano = dano + self.modDestreza
         else:
-            self.Imprudente = False
-        ataque = input(
-            Style.BRIGHT
-            + "Deseja usar ataque utilizar?\n (1) Ataque com Machado 2x (2) Modo ESQUIVOOO\n"
+            for i in range(1, 4):
+                d8 = random.randint(1, 8)
+                dano = dano + d8
+            dano = dano + self.modDestreza
+
+        print(
+            Back.MAGENTA
+            + Fore.WHITE
+            + Style.BRIGHT
+            + "Seu d20: "
+            + str(d20Final)
+            + "\nSeu dano: "
+            + str(dano)
         )
-        if ataque == "1":
-            d12 = random.randint(1, 12)
-            print(Style.BRIGHT + "Soma entre 5 e :  ", d12, self.danoFuria)
-            dano = d12 + 5 + self.danoFuria
-            auxiliar = random.randint(1, 20)
-
-            if self.Imprudente == True:
-                auxiliar += 5
-            print(Style.BRIGHT + "Seu D20: \n Seu dano:", auxiliar, dano)
-
-        else:
-            self.esquivo = True
-            auxiliar = 0
-            dano = 0
-            print(Style.BRIGHT + "Modo ESQUIVO ATIVADO, ME ACERTA QUE EU DUVIDO")
-        msg = "D" + "A" + str(auxiliar).zfill(2) + str(dano)
+        msg = "D" + "A" + str(d20Final).zfill(2) + str(dano)
         return msg
-        # A mensagem de ataque agora inclui o valor correto do dano
 
     def ataqueRecebido(self, msg):
-        if self.esquivo == True:
-            CA = self.CA + 5
-        elif self.Imprudente == True:
-            CA = self.CA - 2
+
+        if msg[:1] == "E" and int(msg[1:3]) >= self.getTeste(msg[1:3]):
+            dano = int(msg[3:5])
+        elif msg[:1] == "A" and int(msg[1:3]) >= self.CA:
+            # Se o ataque for menor que CA+5, usa shield
+            if int(msg[1:3]) < (self.CA + 5) and self.espacos1Ciclo > 0:
+                self.espacos1Ciclo = self.espacos1Ciclo - 1
+                print(
+                    Back.MAGENTA
+                    + Fore.WHITE
+                    + Style.BRIGHT
+                    + "Você usou Escudo Arcano! Seu inimigo errou o Ataque, seu d20 foi: "
+                    + msg[1:3]
+                )
+                if self.espacos1Ciclo == 3:
+                    print(
+                        Back.MAGENTA
+                        + Fore.WHITE
+                        + Style.BRIGHT
+                        + "\nEspaços de magia restantes:\n1º Ciclo: [x][][][]"
+                    )
+                if self.espacos1Ciclo == 2:
+                    print(
+                        Back.MAGENTA
+                        + Fore.WHITE
+                        + Style.BRIGHT
+                        + "\nEspaços de magia restantes:\n1º Ciclo: [x][x][][]"
+                    )
+                if self.espacos1Ciclo == 1:
+                    print(
+                        Back.MAGENTA
+                        + Fore.WHITE
+                        + Style.BRIGHT
+                        + "\nEspaços de magia restantes:\n1º Ciclo: [x][x][x][]"
+                    )
+                if self.espacos1Ciclo == 0:
+                    print(
+                        Back.MAGENTA
+                        + Fore.WHITE
+                        + Style.BRIGHT
+                        + "\nEspaços de magia restantes:\n1º Ciclo: [x][x][x][x]"
+                    )
+                dano = 0
+            else:
+                dano = int(msg[3:5])
         else:
-            CA = self.CA
-        if msg[:1] == "E" and int(msg[1:3]) > self.getTeste(msg[1:3]):
-            dano = int(msg[3:5]) / 2
-        elif msg[:1] == "A" and int(msg[1:3]) > CA:
-            dano = int(msg[3:5]) / 2
-        else:
-            print(Style.BRIGHT + "Seu inimigo errou o ATAQUE, seu D20 foi: ", msg[1:3])
+            print(
+                Back.MAGENTA
+                + Fore.WHITE
+                + Style.BRIGHT
+                + "Seu inimigo errou o Ataque, seu d20 foi: "
+                + msg[1:3]
+            )
             dano = 0
-        print(Style.BRIGHT + "DANO RECEBIDO : ", dano)
+
+        print(Back.MAGENTA + Fore.WHITE + Style.BRIGHT + "Dano recebido : " + str(dano))
 
         nova_vida = self.HP - dano
-        if dano > 20:
-            Irina = input(
-                "Você ira sofrer um dano monstruoso\n Deseja utilizar seu Trunfo Final(única utilização)? \n (1)Sim \n (2) Não\n"
-            )
-            print(
-                "Sua AMADA Irina lhe salvou , Parabéns Herói GROAK, parece que até anjos estão de olho em você!!"
-            )
-            nova_vida += 20
-
-        if nova_vida == 0 and self.orc == False:
-            nova_vida = 1
-            self.orc = True
-            print("EU SOU ORC SEU OTÁRIO!!!\n")
-
         self.HP = nova_vida
-        self.Imprudente = False
-        self.esquivo = False
         return nova_vida
-
-    def getTeste(self):
-        print("oi")

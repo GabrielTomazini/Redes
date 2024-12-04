@@ -26,6 +26,13 @@ class Personagem:
             )
             self.classe = Barbaro()
         elif classe == "2":
+            self.nome = "Oliver"
+            print(
+                Back.MAGENTA
+                + Fore.WHITE
+                + Style.BRIGHT
+                + "\nVocê escolheu um Mago!\nParabéns por escolher o herói Oliver!\n"
+            )
             self.classe = Mago()
         elif classe == "3":
             self.nome = "Nephis"
@@ -41,29 +48,6 @@ class Personagem:
                 + "\nVocê escolheu um Ladino!\nParabéns por escolher Sarah Frostriver!\n"
             )
             self.classe = Ladino()
-
-    def ataqueRecebido(self, msg):
-
-        if msg[:1] == "E" and int(msg[1:3]) > self.getTeste(msg[1:3]):
-            dano = int(msg[3:5])
-        elif msg[:1] == "A" and int(msg[1:3]) > self.classe.CA:
-            dano = int(msg[3:5])
-        else:
-            print(
-                Fore.CYAN + "Seu inimigo errou o Ataque, seu d20 foi: ",
-                Fore.CYAN + msg[1:3],
-            )
-            dano = 0
-        print(Fore.CYAN + "Dano recebido: ", Fore.CYAN + dano)
-        nova_vida = self.getVida() - dano
-        self.setVida(nova_vida)
-        return nova_vida
-
-    def getVida(self):
-        return self.classe.HP
-
-    def setVida(self, novaVida):
-        self.classe.HP = novaVida
 
 
 def main():

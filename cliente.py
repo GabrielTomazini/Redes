@@ -26,6 +26,13 @@ class Personagem:
             )
             self.classe = Barbaro()
         elif classe == "2":
+            self.nome = "Oliver"
+            print(
+                Back.MAGENTA
+                + Fore.WHITE
+                + Style.BRIGHT
+                + "\nVocê escolheu um Mago!\nParabéns por escolher o herói Oliver!\n"
+            )
             self.classe = Mago()
         elif classe == "3":
             self.nome = "Nephis"
