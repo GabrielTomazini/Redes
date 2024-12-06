@@ -19,18 +19,16 @@ class Personagem:
 
         # Definindo a classe com base no parâmetro recebido
         if classe == "1":
-            self.nome = "Groak"
+            self.nome = "Effie"
             print(
                 Fore.YELLOW
-                + "\nVocê escolheu um Bárbaro!\nParabéns por escolher o Herói Groak!\n"
+                + "\nVocê escolheu um Bárbaro!\nParabéns por escolher a Criada por Lobos : Effie!\n"
             )
             self.classe = Barbaro()
         elif classe == "2":
             self.nome = "Oliver"
             print(
-                Back.MAGENTA
-                + Fore.WHITE
-                + Style.BRIGHT
+                Fore.YELLOW
                 + "\nVocê escolheu um Mago!\nParabéns por escolher o herói Oliver!\n"
             )
             self.classe = Mago()
@@ -72,7 +70,9 @@ def main():
 
         codigo = codigo.decode()
         if codigo == "D":
-            acaoInimigo = jogador.recv(9)  # Receber Ataque inimigo
+            acaoInimigo = jogador.recv(
+                6
+            )  # Receber Ataque inimigo     msg = 'D' + 'at' +'18'+'30'
             acaoInimigo = acaoInimigo.decode()
 
             hpRestante = personagem2.classe.ataqueRecebido(acaoInimigo)
