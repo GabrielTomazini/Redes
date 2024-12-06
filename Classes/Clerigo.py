@@ -239,20 +239,20 @@ class Clerigo:
             if self.espacos3Ciclo > 0:
                 for i in range(1, 6):
                     # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 3ºciclo
-                    d4 = random.randint(1, 4)
-                    cura_total += d4
+                    d8 = random.randint(1, 8)
+                    cura_total += d8
                 cura_total += self.modificadorSabedoria
             elif self.espacos2Ciclo > 0:
                 for i in range(1, 4):
                     # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 2ºciclo
-                    d4 = random.randint(1, 4)
-                    cura_total += d4
+                    d8 = random.randint(1, 8)
+                    cura_total += d8
                 cura_total += self.modificadorSabedoria
             elif self.espacos1Ciclo > 0:
                 for i in range(1, 2):
                     # Cura com ação Bônus do D&D2024 6d4 + Sabedoria no 2ºciclo
-                    d4 = random.randint(1, 4)
-                    cura_total += d4
+                    d8 = random.randint(1, 8)
+                    cura_total += d8
                 cura_total += self.modificadorSabedoria
             else:
                 print(
