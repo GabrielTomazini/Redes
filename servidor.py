@@ -19,18 +19,16 @@ class Personagem:
 
         # Definindo a classe com base no parâmetro recebido
         if classe == "1":
-            self.nome = "Groak"
+            self.nome = "Effie"
             print(
                 Fore.YELLOW
-                + "\nVocê escolheu um Bárbaro!\nParabéns por escolher o Herói Groak!\n"
+                + "\nVocê escolheu um Bárbaro!\nParabéns por escolher a Criada por Lobos : Effie!\n"
             )
             self.classe = Barbaro()
         elif classe == "2":
             self.nome = "Oliver"
             print(
-                Back.MAGENTA
-                + Fore.WHITE
-                + Style.BRIGHT
+                Fore.YELLOW
                 + "\nVocê escolheu um Mago!\nParabéns por escolher o herói Oliver!\n"
             )
             self.classe = Mago()
@@ -70,8 +68,7 @@ def main():
 
     while not encerrado:
         print(Fore.CYAN + "Sua vez\n")
-        msg = personagem1.classe.ataqueAcerto()  # Atacando o Inimigo,
-
+        msg = personagem1.classe.ataqueAcerto()  # Atacando o Inimigo
         jogador.send(
             msg.encode()
         )  # enviar teste ou D20 e o dano, msg = D +'AD' + '18' + '30'

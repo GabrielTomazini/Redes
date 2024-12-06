@@ -19,6 +19,12 @@ class Ladino:
     def __init__(self):
         self.CA = 16
         self.HP = 43
+        self.strength = -1
+        self.destreza = 3
+        self.wisdom = 2
+        self.charisma = 0
+        self.constituicao = 3
+        self.inteligencia = -1
 
     def ataqueAcerto(self):
         ataque = input(
@@ -58,17 +64,21 @@ class Ladino:
             d20Final = maiord20 + self.modDestreza + bonusProficiencia
             dano = 0
             if d20Final == 20:  # Ataque crítico, rola o dobro dos dados e modificadores
+                d20Final = (
+                    40  # acerto automático, valor ridiculamente alto para simular isso
+                )
                 for i in range(1, 8):
                     d6 = random.randint(1, 6)
                     dano = dano + d6
-                dano = dano + 2 * self.modDestreza  # +10 sharpshooter
+                dano = dano + 2 * self.modDestreza
             else:
                 for i in range(1, 4):
                     d6 = random.randint(1, 6)
                     dano = dano + d6
-                dano = dano + self.modDestreza  # +10 sharpshooter
+                dano = dano + self.modDestreza
         else:
             print(Back.WHITE + Fore.CYAN + Style.BRIGHT + "Digite um ataque válido!\n")
+            self.ataqueAcerto()
         print(
             Back.WHITE
             + Fore.CYAN
@@ -78,23 +88,42 @@ class Ladino:
             + "\nSeu dano: "
             + str(dano)
         )
-        msg = "D" + "A" + str(d20Final).zfill(2) + str(dano)
+        msg = "D" + "AT" + str(d20Final).zfill(2) + str(dano)
         return msg
+
+    def getTeste(self, atributo, msg):
+        d20 = random.randint(1, 20)
+        salvaguarda = d20 + atributo
+        if int(msg[2:4]) > salvaguarda:
+            dano = math.ceil(int(msg[4:6]))
+        else:
+            dano = math.ceil(int(msg[4:6]) / 2)
+        return dano
 
     def ataqueRecebido(self, msg):
 
-        if msg[:1] == "E" and int(msg[1:3]) >= self.getTeste(msg[1:3]):
-            dano = math.ceil(int(msg[3:5]) / 2)
-        elif msg[:1] == "A" and int(msg[1:3]) >= self.CA:
+        if msg[:2] == "ES":
+            dano = self.getTeste(self.strength, msg)
+        elif msg[:2] == "ED":
+            dano = self.getTeste(self.destreza, msg)
+        elif msg[:2] == "EI":
+            dano = self.getTeste(self.inteligencia, msg)
+        elif msg[:2] == "EW":
+            dano = self.getTeste(self.wisdom, msg)
+        elif msg[:2] == "EC":
+            dano = self.getTeste(self.constituicao, msg)
+        elif msg[:2] == "EH":
+            dano = self.getTeste(self.charisma, msg)
+        elif msg[:2] == "AT" and int(msg[2:4]) >= self.CA:
             # Se o ataque for menor que CA+5, usa shield
-            if int(msg[1:3]) < (self.CA + 5) and self.espacosDeMagia > 0:
+            if int(msg[2:4]) < (self.CA + 5) and self.espacosDeMagia > 0:
                 self.espacosDeMagia = self.espacosDeMagia - 1
                 print(
                     Back.WHITE
                     + Fore.CYAN
                     + Style.BRIGHT
                     + "Você usou Escudo Arcano! Seu inimigo errou o Ataque, seu d20 foi: "
-                    + msg[1:3]
+                    + msg[2:4]
                 )
                 if self.espacosDeMagia == 2:
                     print(
@@ -119,14 +148,14 @@ class Ladino:
                     )
                 dano = 0
             else:
-                dano = int(msg[3:5])
+                dano = int(msg[4:6])
         else:
             print(
                 Back.WHITE
                 + Fore.CYAN
                 + Style.BRIGHT
                 + "Seu inimigo errou o Ataque, seu d20 foi: "
-                + msg[1:3]
+                + msg[2:4]
             )
             dano = 0
         print(Back.WHITE + Fore.CYAN + Style.BRIGHT + "Dano recebido : " + str(dano))
